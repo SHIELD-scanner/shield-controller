@@ -1,0 +1,137 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: shield-system
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shield-controller-config
+  namespace: shield-system
+data:
+  GRPC_SERVER_HOST: "shield-grpc-receiver.shield-system.svc.cluster.local"
+  GRPC_SERVER_PORT: "50051"
+  CLUSTER: "acc"
+  LOG_LEVEL: "debug"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shield-controller
+  namespace: shield-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shield-controller
+  template:
+    metadata:
+      labels:
+        app: shield-controller
+    spec:
+      serviceAccountName: shield-controller
+      containers:
+        - name: controller
+          image: ghcr.io/shield-scanner/controller/shield-controller:latest
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: shield-controller-config
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: shield-controller
+  namespace: shield-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: shield-controller
+  namespace: shield-system
+rules:
+  - apiGroups: [""]
+    resources: ["namespaces"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["aquasecurity.github.io"]
+    resources:
+      [
+        "vulnerabilityreports",
+        "clustercompliancereports",
+        "clusterconfigauditreports",
+        "clusterinfraassessmentreports",
+        "clusterrbacassessmentreports",
+        "clustersbomreports",
+        "clustervulnerabilityreports",
+        "configauditreports",
+        "exposedsecretreports",
+        "infraassessmentreports",
+        "rbacassessmentreports",
+        "sbomreports",
+      ]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: shield-controller
+  namespace: shield-system
+subjects:
+  - kind: ServiceAccount
+    name: shield-controller
+    namespace: shield-system
+roleRef:
+  kind: Role
+  name: shield-controller
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: shield-controller
+rules:
+  - apiGroups: [""]
+    resources: ["namespaces"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["aquasecurity.github.io"]
+    resources:
+      [
+        "vulnerabilityreports",
+        "clustercompliancereports",
+        "clusterconfigauditreports",
+        "clusterinfraassessmentreports",
+        "clusterrbacassessmentreports",
+        "clustersbomreports",
+        "clustervulnerabilityreports",
+        "configauditreports",
+        "exposedsecretreports",
+        "infraassessmentreports",
+        "rbacassessmentreports",
+        "sbomreports",
+      ]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["falco.security.io"]
+    resources: ["falcos", "falcorules", "falcorulegroupses"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: shield-controller
+subjects:
+  - kind: ServiceAccount
+    name: shield-controller
+    namespace: shield-system
+roleRef:
+  kind: ClusterRole
+  name: shield-controller
+  apiGroup: rbac.authorization.k8s.io

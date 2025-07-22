@@ -1,0 +1,7 @@
+kubernetes
+PyYAML
+sentry-sdk
+python-dotenv
+grpcio
+grpcio-tools
+protobuf
