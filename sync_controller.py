@@ -1,11 +1,12 @@
-import os
-import logging
 import json
+import logging
+import os
 from datetime import datetime
-from kubernetes import client, config, watch
+
 import grpc
 import sentry_sdk
 from dotenv import load_dotenv
+from kubernetes import client, config, watch
 
 # Import generated gRPC classes (will be generated after running generate_grpc.sh)
 try:
@@ -20,7 +21,9 @@ load_dotenv()
 
 
 class KubernetesJSONEncoder(json.JSONEncoder):
+
     """Custom JSON encoder to handle Kubernetes objects with datetime and other non-serializable types"""
+
     def default(self, obj):
         if isinstance(obj, datetime):
             return obj.isoformat()

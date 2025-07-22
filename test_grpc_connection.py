@@ -1,20 +1,21 @@
 #!/usr/bin/env python3
-"""
-Test script to verify gRPC connection to the receiver service
-"""
+"""Test script to verify gRPC connection to the receiver service."""
 
-import os
-import grpc
 import json
+import os
 import sys
 from datetime import datetime
+
+import grpc
 
 # Add the current directory to path so we can import generated proto files
 sys.path.append('.')
 
 
 class KubernetesJSONEncoder(json.JSONEncoder):
+
     """Custom JSON encoder to handle Kubernetes objects with datetime and other non-serializable types"""
+
     def default(self, obj):
         if isinstance(obj, datetime):
             return obj.isoformat()
@@ -34,7 +35,6 @@ except ImportError:
 
 def test_grpc_connection():
     """Test the gRPC connection and send a sample resource"""
-    
     # Configuration
     grpc_host = os.environ.get("GRPC_SERVER_HOST", "localhost")
     grpc_port = os.environ.get("GRPC_SERVER_PORT", "50051")
