@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package sync_service;
+
+// The sync service definition
+service SyncService {
+  // Sync a resource to the receiver
+  rpc SyncResource (SyncResourceRequest) returns (SyncResourceResponse);
+  
+  // Sync a namespace to the receiver
+  rpc SyncNamespace (SyncNamespaceRequest) returns (SyncNamespaceResponse);
+}
+
+// Request message for syncing a resource
+message SyncResourceRequest {
+  string event_type = 1;
+  string resource_type = 2;
+  string namespace = 3;
+  string name = 4;
+  string cluster = 5;
+  string uid = 6;
+  string data_json = 7; // JSON serialized data
+}
+
+// Response message for resource sync
+message SyncResourceResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Request message for syncing a namespace
+message SyncNamespaceRequest {
+  string event_type = 1;
+  string name = 2;
+  string cluster = 3;
+  string uid = 4;
+  string data_json = 5; // JSON serialized data
+}
+
+// Response message for namespace sync
+message SyncNamespaceResponse {
+  bool success = 1;
+  string message = 2;
+}

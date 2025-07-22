@@ -1,0 +1,25 @@
+version: "3.8"
+services:
+  mongo:
+    image: mongo:7
+    container_name: local-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  controller:
+    build: .
+    container_name: shield-controller
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/
+      - MONGO_DB=shield
+      - CLUSTER=local
+      - LOG_LEVEL=info
+    depends_on:
+      - mongo
+    volumes:
+      - .:/app
+
+volumes:
+  mongo-data:
