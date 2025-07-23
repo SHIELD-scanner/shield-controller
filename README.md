@@ -1,5 +1,6 @@
 # Shield Controller gRPC Architecture
-
+[![Build and Push Docker image](https://github.com/SHIELD-scanner/shield-controller/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/SHIELD-scanner/shield-controller/actions/workflows/docker-publish.yml)
+[![trivy](https://github.com/SHIELD-scanner/shield-controller/actions/workflows/trivy.yml/badge.svg)](https://github.com/SHIELD-scanner/shield-controller/actions/workflows/trivy.yml)
 ## Overview
 
 The Shield Controller has been updated to use a gRPC-based architecture. Instead of directly connecting to MongoDB, the controller now sends data to a gRPC receiver service that handles the MongoDB operations.
