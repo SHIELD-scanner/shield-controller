@@ -33,7 +33,7 @@ class KubernetesJSONEncoder(json.JSONEncoder):
         except TypeError:
             return str(obj)
 
-sentry_dsn = os.environ.get("DSN")
+sentry_dsn = os.environ.get("SENTRY_DSN")
 if sentry_dsn:
     sentry_sdk.init(
         dsn=sentry_dsn,
