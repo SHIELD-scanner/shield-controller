@@ -35,6 +35,8 @@ class KubernetesJSONEncoder(json.JSONEncoder):
 
 sentry_dsn = os.environ.get("SENTRY_DSN")
 if sentry_dsn:
+    print("Loading sentry")
+    print(sentry_dsn)
     sentry_sdk.init(
         dsn=sentry_dsn,
         # Add data like request headers and IP for users,
