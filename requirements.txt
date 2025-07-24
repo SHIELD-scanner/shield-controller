@@ -17,7 +17,7 @@ durationpy==0.10
     # via kubernetes
 google-auth==2.40.3
     # via kubernetes
-grpcio==1.73.1
+grpcio==1.74.0
     # via
     #   grpcio-tools
     #   shield-controller (pyproject.toml)
