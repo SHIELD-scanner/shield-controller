@@ -1,5 +1,5 @@
 name: trivy
-true:
+on:
   push:
     branches:
     - main
@@ -12,13 +12,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     - name: Build an image from Dockerfile
-      run: docker build -t ghcr.io/shield-scanner/shield-receiver/shield-controller:${{
-        github.sha }} .
+      run: docker build -t ghcr.io/shield-scanner/shield-receiver/shield-controller:${{ github.sha }} .
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@0.32.0
       with:
-        image-ref: ghcr.io/shield-scanner/shield-receiver/shield-controller:${{ github.sha
-          }}
+        image-ref: ghcr.io/shield-scanner/shield-receiver/shield-controller:${{ github.sha }}
         format: table
         exit-code: '1'
         ignore-unfixed: true
