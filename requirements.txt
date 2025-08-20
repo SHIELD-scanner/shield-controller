@@ -49,7 +49,7 @@ pyyaml==6.0.2
     # via
     #   kubernetes
     #   shield-controller (pyproject.toml)
-requests==2.32.4
+requests==2.32.5
     # via
     #   kubernetes
     #   requests-oauthlib
