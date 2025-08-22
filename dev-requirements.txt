@@ -71,7 +71,7 @@ requests-oauthlib==2.0.0
     # via kubernetes
 rsa==4.9.1
     # via google-auth
-ruff==0.12.9
+ruff==0.12.10
     # via shield-controller (pyproject.toml)
 sentry-sdk==2.35.0
     # via shield-controller (pyproject.toml)
