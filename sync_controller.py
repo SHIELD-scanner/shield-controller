@@ -4,7 +4,6 @@ import os
 from datetime import datetime
 
 import grpc
-import sentry_sdk
 from dotenv import load_dotenv
 from kubernetes import client, config, watch
 
@@ -21,7 +20,6 @@ load_dotenv()
 
 
 class KubernetesJSONEncoder(json.JSONEncoder):
-
     """Custom JSON encoder to handle Kubernetes objects with datetime and other non-serializable types"""
 
     def default(self, obj):
@@ -33,16 +31,6 @@ class KubernetesJSONEncoder(json.JSONEncoder):
         except TypeError:
             return str(obj)
 
-sentry_dsn = os.environ.get("SENTRY_DSN")
-if sentry_dsn:
-    print("Loading sentry")
-    print(sentry_dsn)
-    sentry_sdk.init(
-        dsn=sentry_dsn,
-        # Add data like request headers and IP for users,
-        # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
-        send_default_pii=True,
-    )
 
 # Get configuration from environment variables
 GRPC_SERVER_HOST = os.environ.get("GRPC_SERVER_HOST", "localhost")
@@ -96,11 +84,13 @@ logging.basicConfig(level=LOG_LEVEL)
 logger = logging.getLogger("sync-controller")
 CLUSTER = get_cluster_name(logger)
 
+
 # Create gRPC channel and stub
 def create_grpc_client():
-    channel = grpc.insecure_channel(f'{GRPC_SERVER_HOST}:{GRPC_SERVER_PORT}')
+    channel = grpc.insecure_channel(f"{GRPC_SERVER_HOST}:{GRPC_SERVER_PORT}")
     stub = sync_service_pb2_grpc.SyncServiceStub(channel)
     return channel, stub
+
 
 # Global gRPC client
 grpc_channel, grpc_stub = create_grpc_client()
@@ -150,17 +140,21 @@ def sync_to_grpc(resource_type, obj, event_type):
             name=meta.get("name", ""),
             cluster=CLUSTER,
             uid=uid,
-            data_json=json.dumps(obj, cls=KubernetesJSONEncoder)
+            data_json=json.dumps(obj, cls=KubernetesJSONEncoder),
         )
-        
+
         # Send to gRPC receiver
         response = grpc_stub.SyncResource(request)
-        
+
         if response.success:
-            logger.info(f"Synced {resource_type} {meta.get('name')} ({event_type}) via gRPC")
+            logger.info(
+                f"Synced {resource_type} {meta.get('name')} ({event_type}) via gRPC"
+            )
         else:
-            logger.error(f"Failed to sync {resource_type} {meta.get('name')}: {response.message}")
-            
+            logger.error(
+                f"Failed to sync {resource_type} {meta.get('name')}: {response.message}"
+            )
+
     except grpc.RpcError as e:
         logger.error(f"gRPC error syncing {resource_type} {meta.get('name')}: {e}")
     except Exception as e:
@@ -219,17 +213,19 @@ def sync_namespace_to_grpc(obj, event_type):
             name=meta.get("name", ""),
             cluster=CLUSTER,
             uid=uid,
-            data_json=json.dumps(obj, cls=KubernetesJSONEncoder)
+            data_json=json.dumps(obj, cls=KubernetesJSONEncoder),
         )
-        
+
         # Send to gRPC receiver
         response = grpc_stub.SyncNamespace(request)
-        
+
         if response.success:
             logger.info(f"Synced namespace {meta.get('name')} ({event_type}) via gRPC")
         else:
-            logger.error(f"Failed to sync namespace {meta.get('name')}: {response.message}")
-            
+            logger.error(
+                f"Failed to sync namespace {meta.get('name')}: {response.message}"
+            )
+
     except grpc.RpcError as e:
         logger.error(f"gRPC error syncing namespace {meta.get('name')}: {e}")
     except Exception as e:
@@ -267,9 +263,13 @@ if __name__ == "__main__":
     # Test gRPC connection
     try:
         grpc.channel_ready_future(grpc_channel).result(timeout=10)
-        logger.info(f"Connected to gRPC server at {GRPC_SERVER_HOST}:{GRPC_SERVER_PORT}")
+        logger.info(
+            f"Connected to gRPC server at {GRPC_SERVER_HOST}:{GRPC_SERVER_PORT}"
+        )
     except grpc.FutureTimeoutError:
-        logger.error(f"Failed to connect to gRPC server at {GRPC_SERVER_HOST}:{GRPC_SERVER_PORT}")
+        logger.error(
+            f"Failed to connect to gRPC server at {GRPC_SERVER_HOST}:{GRPC_SERVER_PORT}"
+        )
         exit(1)
 
     for res in aqua_resources:
@@ -278,18 +278,16 @@ if __name__ == "__main__":
     initial_import_namespaces()
 
     threads = []
-    
+
     t_ns = threading.Thread(target=watch_namespaces, daemon=True)
     t_ns.start()
     threads.append(t_ns)
-        
+
     for res in aqua_resources:
         t = threading.Thread(target=watch_resource, args=(res,), daemon=True)
         t.start()
         threads.append(t)
-  
 
-    
     logger.info("Controller started. Watching resources and namespaces...")
     for t in threads:
         t.join()

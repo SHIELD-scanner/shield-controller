@@ -11,6 +11,13 @@ import grpc
 # Add the current directory to path so we can import generated proto files
 sys.path.append('.')
 
+# Skip this integration-style test by default. Set RUN_GRPC_TEST=1 to enable it.
+import os as _os
+if _os.environ.get("RUN_GRPC_TEST", "0") != "1":
+    import pytest as _pytest
+
+    _pytest.skip("Skipping gRPC integration test. Set RUN_GRPC_TEST=1 to run.", allow_module_level=True)
+
 
 class KubernetesJSONEncoder(json.JSONEncoder):
 

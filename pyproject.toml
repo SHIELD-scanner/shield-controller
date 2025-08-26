@@ -6,7 +6,6 @@ description = "Shield Controller"
 dependencies = [
   "kubernetes",
   "PyYAML",
-  "sentry-sdk",
   "python-dotenv",
   "grpcio",
   "grpcio-tools",
@@ -23,7 +22,8 @@ dev = [
 dev-dependencies = [
   "black",
   "ruff", 
-  "validate-pyproject"
+  "validate-pyproject",
+  "pytest"
 ]
 
 [build-system]

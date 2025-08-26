@@ -10,7 +10,6 @@ certifi==2025.8.3
     # via
     #   kubernetes
     #   requests
-    #   sentry-sdk
 charset-normalizer==3.4.3
     # via requests
 durationpy==0.10
@@ -57,8 +56,6 @@ requests-oauthlib==2.0.0
     # via kubernetes
 rsa==4.9.1
     # via google-auth
-sentry-sdk==2.35.0
-    # via shield-controller (pyproject.toml)
 six==1.17.0
     # via
     #   kubernetes
@@ -67,7 +64,6 @@ urllib3==2.5.0
     # via
     #   kubernetes
     #   requests
-    #   sentry-sdk
 websocket-client==1.8.0
     # via kubernetes
 
