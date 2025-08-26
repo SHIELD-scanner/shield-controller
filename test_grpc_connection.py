@@ -13,6 +13,7 @@ sys.path.append('.')
 
 # Skip this integration-style test by default. Set RUN_GRPC_TEST=1 to enable it.
 import os as _os
+
 if _os.environ.get("RUN_GRPC_TEST", "0") != "1":
     import pytest as _pytest
 

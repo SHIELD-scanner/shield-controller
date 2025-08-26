@@ -20,6 +20,7 @@ load_dotenv()
 
 
 class KubernetesJSONEncoder(json.JSONEncoder):
+
     """Custom JSON encoder to handle Kubernetes objects with datetime and other non-serializable types"""
 
     def default(self, obj):
