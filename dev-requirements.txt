@@ -58,7 +58,7 @@ python-dateutil==2.9.0.post0
     # via kubernetes
 python-dotenv==1.1.1
     # via shield-controller (pyproject.toml)
-pyyaml==6.0.2
+pyyaml==6.0.3
     # via
     #   kubernetes
     #   shield-controller (pyproject.toml)
