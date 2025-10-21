@@ -22,7 +22,7 @@ fastjsonschema==2.21.2
     # via validate-pyproject
 google-auth==2.40.3
     # via kubernetes
-grpcio==1.75.0
+grpcio==1.76.0
     # via
     #   grpcio-tools
     #   shield-controller (pyproject.toml)
