@@ -20,7 +20,7 @@ durationpy==0.10
     # via kubernetes
 fastjsonschema==2.21.2
     # via validate-pyproject
-google-auth==2.40.3
+google-auth==2.42.0
     # via kubernetes
 grpcio==1.75.0
     # via
