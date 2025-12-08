@@ -44,7 +44,7 @@ pathspec==0.12.1
     # via black
 platformdirs==4.4.0
     # via black
-protobuf==6.32.1
+protobuf==6.33.2
     # via
     #   grpcio-tools
     #   shield-controller (pyproject.toml)
