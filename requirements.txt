@@ -24,7 +24,7 @@ grpcio-tools==1.76.0
     # via shield-controller (pyproject.toml)
 idna==3.10
     # via requests
-kubernetes==33.1.0
+kubernetes==34.1.0
     # via shield-controller (pyproject.toml)
 oauthlib==3.3.1
     # via
